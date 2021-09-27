@@ -1,0 +1,44 @@
+{
+  "name": "solid-create-form",
+  "version": "0.1.0",
+  "description": "Custom Solid form",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "start": "tsc --watch",
+    "build": "tsc",
+    "size": "size-limit",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SanichKotikov/solid-create-form.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SanichKotikov/solid-create-form/issues"
+  },
+  "homepage": "https://github.com/SanichKotikov/solid-create-form",
+  "author": "Sanich Kotikov <sancho@cdrpro.ru> (https://sanichkotikov.github.io)",
+  "license": "MIT",
+  "files": [
+    "lib"
+  ],
+  "keywords": [
+    "solid-js",
+    "form"
+  ],
+  "peerDependencies": {
+    "solid-js": ">= 1.0.0"
+  },
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "5.0.4",
+    "size-limit": "5.0.4",
+    "typescript": "4.4.3"
+  },
+  "size-limit": [
+    {
+      "path": "lib/index.js"
+    }
+  ]
+}
