@@ -1,7 +1,7 @@
 {
   "name": "solid-create-form",
-  "version": "0.1.0",
-  "description": "Custom Solid form",
+  "version": "0.2.0",
+  "description": "Solid utility to control forms",
   "main": "lib/index.js",
   "module": "lib/index.js",
   "sideEffects": false,
