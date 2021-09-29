@@ -11,6 +11,12 @@ export interface FormOptions<T extends {}> {
   rules?: FormRules<T>;
 }
 
+export interface FormStore<T extends {}> {
+  values: T;
+  errors: FormErrors<T>;
+  recheck: boolean;
+}
+
 export interface Form<T extends {}> {
   values: Accessor<T>;
   errors: Accessor<FormErrors<T>>;

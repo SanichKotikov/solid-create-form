@@ -1,64 +1,57 @@
-import { batch, createMemo, createSignal } from 'solid-js';
+import { createMemo } from 'solid-js';
+import { createStore, DeepReadonly } from 'solid-js/store';
 
 import { hasErrors, isEqual, keys } from './utils';
 import { revalidate, validate } from './validate';
-import type { Form, FormErrors, FormHandlers, FormOptions } from './types';
+import type { Form, FormErrors, FormHandlers, FormOptions, FormStore } from './types';
 
-// TODO: looks like setter of createSignal has wrong typings, try to fix
+function getInitState<T>(init: T): FormStore<T> {
+  return { values: { ...init }, errors: {}, recheck: false };
+}
 
 export function createForm<T>(options: Readonly<FormOptions<T>>): Readonly<Form<T>> {
   let defaults: T = { ...options.defaultValues };
 
-  const [values, updValues] = createSignal<T>(defaults);
-  const [errors, updErrors] = createSignal<FormErrors<T>>({});
-  const [recheck, updRecheck] = createSignal(false);
-
-  const isDirty = createMemo(() => !isEqual(defaults, values()));
+  const [store, setStore] = createStore<FormStore<T>>(getInitState(defaults));
 
   const handlers = keys(defaults).reduce((acc, field) => {
     acc[field] = <K extends keyof T>(value: T[K]) => {
-      const formErrors: FormErrors<T> = recheck() ? revalidate(field, value, errors(), options.rules) : errors();
+      const errors = (store.recheck
+        ? revalidate(field, value, store.errors, options.rules)
+        : store.errors) as DeepReadonly<FormErrors<T>>;
 
-      batch(() => {
-        // @ts-ignore
-        updValues((prev: T) => ({ ...prev, [field]: value }));
-        // @ts-ignore
-        updErrors(formErrors);
-      });
+      setStore((prev) => ({ ...prev, values: { ...prev.values, [field]: value }, errors }));
     };
     return acc;
   }, {} as FormHandlers<T>);
 
   const setErrors = (value: FormErrors<T>) => {
-    // @ts-ignore
-    updErrors((prev: FormErrors<T>) => ({ ...prev, ...value }));
+    setStore('errors', (prev: FormErrors<T>) => ({ ...prev, ...value }));
   };
 
   const wrapSubmit = (callback: (values: T) => void) => {
     return (event?: SubmitEvent) => {
       if (event instanceof Event) event.preventDefault();
-      const formErrors: FormErrors<T> = validate(values(), options.rules);
 
-      batch(() => {
-        // @ts-ignore
-        updErrors(formErrors);
-        updRecheck(true);
-      });
+      const errors = validate<T>(store.values, options.rules);
+      setStore((prev) => ({ ...prev, errors: errors as DeepReadonly<FormErrors<T>>, recheck: true }));
 
-      if (!hasErrors(formErrors)) callback(values());
+      if (!hasErrors(errors)) callback(store.values);
     };
   };
 
   const reset = (updates?: Partial<T>) => {
     defaults = { ...defaults, ...updates };
-
-    batch(() => {
-      // @ts-ignore
-      updValues(defaults);
-      updErrors({});
-      updRecheck(false);
-    });
+    setStore(getInitState(defaults));
   };
 
-  return { values, errors, isDirty, handlers, setErrors, wrapSubmit, reset };
+  return {
+    values: createMemo(() => store.values),
+    errors: createMemo(() => store.errors),
+    isDirty: createMemo(() => !isEqual(defaults, store.values)),
+    handlers,
+    setErrors,
+    wrapSubmit,
+    reset,
+  };
 }

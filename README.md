@@ -1,6 +1,6 @@
 # solid-create-form
 
-A tiny (~525 B) Solid utility to control forms.
+A tiny (~536 B) Solid utility to control forms.
 
 ## Usage
 
