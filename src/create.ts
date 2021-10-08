@@ -17,7 +17,7 @@ export function createForm<T>(options: Readonly<FormOptions<T>>): Readonly<Form<
   const handlers = keys(defaults).reduce((acc, field) => {
     acc[field] = <K extends keyof T>(value: T[K]) => {
       const errors = (store.recheck
-        ? revalidate(field, value, store.errors, options.rules)
+        ? revalidate(field, value, store.values, store.errors, options.rules)
         : store.errors) as DeepReadonly<FormErrors<T>>;
 
       setStore((prev) => ({ ...prev, values: { ...prev.values, [field]: value }, errors }));
