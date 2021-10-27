@@ -1,6 +1,6 @@
 # solid-create-form
 
-A tiny (~545 B) Solid utility to control forms.
+A tiny (~557 B) Solid utility to control forms.
 
 Please note, this library assumes that `onChange` has the following interface: `(value: T) => void;`. So if your
 controls call onChange with event instead of new value, you may need write some simple wrapper for form handlers.

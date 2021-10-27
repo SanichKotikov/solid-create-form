@@ -29,14 +29,16 @@ export function createForm<T>(options: Readonly<FormOptions<T>>): Readonly<Form<
     setStore('errors', (prev: FormErrors<T>) => ({ ...prev, ...value }));
   };
 
+  const trigger = (): FormErrors<T> => {
+    const errors = validate<T>(store.values, options.rules);
+    setStore((prev) => ({ ...prev, errors: errors as DeepReadonly<FormErrors<T>>, recheck: true }));
+    return errors;
+  };
+
   const wrapSubmit = (callback: (values: T) => void) => {
     return (event?: SubmitEvent) => {
       if (event instanceof Event) event.preventDefault();
-
-      const errors = validate<T>(store.values, options.rules);
-      setStore((prev) => ({ ...prev, errors: errors as DeepReadonly<FormErrors<T>>, recheck: true }));
-
-      if (!hasErrors(errors)) callback(store.values);
+      if (!hasErrors(trigger())) callback(store.values);
     };
   };
 
@@ -52,6 +54,7 @@ export function createForm<T>(options: Readonly<FormOptions<T>>): Readonly<Form<
     handlers,
     setErrors,
     wrapSubmit,
+    trigger,
     reset,
   };
 }

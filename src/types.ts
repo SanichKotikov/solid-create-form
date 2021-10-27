@@ -19,10 +19,11 @@ export interface FormStore<T extends {}> {
 
 export interface Form<T extends {}> {
   values: Accessor<T>;
-  errors: Accessor<FormErrors<T>>;
+  errors: Accessor<Readonly<FormErrors<T>>>;
   isDirty: Accessor<boolean>;
-  handlers: FormHandlers<T>;
-  setErrors: (errors: FormErrors<T>) => void;
+  handlers: Readonly<FormHandlers<T>>;
+  setErrors: (errors: Readonly<FormErrors<T>>) => void;
   wrapSubmit: (callback: (values: T) => void) => (event?: SubmitEvent) => void;
+  trigger: () => Readonly<FormErrors<T>>;
   reset: (updates?: Partial<T>) => void;
 }
