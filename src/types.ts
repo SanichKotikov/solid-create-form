@@ -21,6 +21,7 @@ export interface Form<T extends {}> {
   values: Accessor<T>;
   errors: Accessor<Readonly<FormErrors<T>>>;
   isDirty: Accessor<boolean>;
+  isValid: Accessor<boolean>;
   handlers: Readonly<FormHandlers<T>>;
   setErrors: (errors: Readonly<FormErrors<T>>) => void;
   wrapSubmit: (callback: (values: T) => void) => (event?: SubmitEvent) => void;

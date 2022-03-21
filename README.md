@@ -1,6 +1,6 @@
 # solid-create-form
 
-A tiny (~557 B) Solid utility to control forms.
+A tiny (~778 B) Solid utility to control forms.
 
 Please note, this library assumes that `onChange` has the following interface: `(value: T) => void;`. So if your
 controls call onChange with event instead of new value, you may need write some simple wrapper for form handlers.
@@ -92,6 +92,13 @@ const someAction = () => {
 ```typescript jsx
 const { isDirty } = createForm<FormValues>();
 <input type="submit" disabled={!isDirty()} />
+```
+
+### Checking that form data is valid
+
+```typescript jsx
+const { isValid } = createForm<FormValues>();
+<input type="submit" disabled={!isValid()} />
 ```
 
 ### Resetting form values

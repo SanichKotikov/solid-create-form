@@ -21,7 +21,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "forceConsistentCasingInFileNames": true,
     "importsNotUsedAsValues": "error",
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true,
     "removeComments": true,
     "jsx": "preserve"

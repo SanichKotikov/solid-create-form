@@ -51,6 +51,7 @@ export function createForm<T>(options: Readonly<FormOptions<T>>): Readonly<Form<
     values: createMemo(() => store.values),
     errors: createMemo(() => store.errors),
     isDirty: createMemo(() => !isEqual(defaults, store.values)),
+    isValid: createMemo(() => !hasErrors(validate<T>(store.values, options.rules))),
     handlers,
     setErrors,
     wrapSubmit,
