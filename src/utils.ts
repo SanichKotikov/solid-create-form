@@ -4,15 +4,9 @@ export function keys<T extends {}>(obj: T) {
   return Object.keys(obj) as unknown as ReadonlyArray<keyof T>;
 }
 
-export function omit<T extends {}, K extends keyof T>(object: T, ...props: K[]): Omit<T, K> {
-  return keys(object).reduce((acc, prop) => {
-    if (!props.includes(prop as K)) (acc as any)[prop] = object[prop];
-    return acc;
-  }, {} as Omit<T, K>);
-}
-
-export function isString(value: unknown): value is string {
-  return typeof value === 'string';
+export function omitError<T extends {}>(errors: FormErrors<T>, name: keyof T) {
+  const { [name]: _, ...result } = errors;
+  return result as FormErrors<T>;
 }
 
 // TODO: rewrite

@@ -1,3 +1,10 @@
 export { createForm } from './create';
 
-export type { FormOptions, FormRule, FormRules, FormValidateResult, FormHandlers, FormErrors } from './types';
+export type {
+  FormOptions,
+  FormRuleReturn,
+  FormRule,
+  FormRules,
+  FormHandlers,
+  FormErrors,
+} from './types';

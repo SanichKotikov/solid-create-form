@@ -1,27 +1,32 @@
 import { createMemo } from 'solid-js';
-import { createStore, DeepReadonly } from 'solid-js/store';
+import { createStore } from 'solid-js/store';
 
 import { hasErrors, isEqual, keys } from './utils';
 import { revalidate, validate } from './validate';
 import type { Form, FormErrors, FormHandlers, FormOptions, FormStore } from './types';
 
-function getInitState<T>(init: T): FormStore<T> {
+function getInitState<T extends {}>(init: T): FormStore<T> {
   return { values: { ...init }, errors: {}, recheck: false };
 }
 
-export function createForm<T>(options: Readonly<FormOptions<T>>): Readonly<Form<T>> {
+export function createForm<T extends {}>(options: Readonly<FormOptions<T>>): Readonly<Form<T>> {
   let defaults: T = { ...options.defaultValues };
 
   const [store, setStore] = createStore<FormStore<T>>(getInitState(defaults));
 
   const handlers = keys(defaults).reduce((acc, field) => {
     acc[field] = <K extends keyof T>(value: T[K]) => {
-      const errors = (store.recheck
-        ? revalidate(field, value, store.values, store.errors, options.rules)
-        : store.errors) as DeepReadonly<FormErrors<T>>;
+      const rules = options.rules?.[field];
 
-      setStore((prev) => ({ ...prev, values: { ...prev.values, [field]: value }, errors }));
+      setStore((prev) => ({
+        ...prev,
+        errors: prev.recheck && !!rules
+          ? revalidate(field, value, prev, rules)
+          : prev.errors,
+        values: { ...prev.values, [field]: value },
+      }));
     };
+
     return acc;
   }, {} as FormHandlers<T>);
 
@@ -31,7 +36,8 @@ export function createForm<T>(options: Readonly<FormOptions<T>>): Readonly<Form<
 
   const trigger = (): FormErrors<T> => {
     const errors = validate<T>(store.values, options.rules);
-    setStore((prev) => ({ ...prev, errors: errors as DeepReadonly<FormErrors<T>>, recheck: true }));
+    setStore((prev) => ({ ...prev, errors, recheck: true }));
+
     return errors;
   };
 

@@ -2,9 +2,9 @@ import type { Accessor } from 'solid-js';
 
 export type FormErrors<T extends {}> = Partial<Record<keyof T, string>>;
 export type FormHandlers<T extends {}> = { [K in keyof T]: (value: T[K]) => void };
-export type FormRule<T extends {}, V extends unknown> = (value: V, values: T) => boolean | string;
+export type FormRuleReturn = boolean | string;
+export type FormRule<T extends {}, V extends unknown> = (value: V, values: T) => FormRuleReturn;
 export type FormRules<T extends {}> = Partial<{ [K in keyof T]: readonly FormRule<T, T[K]>[] }>;
-export type FormValidateResult = string | undefined;
 
 export interface FormOptions<T extends {}> {
   defaultValues: T;

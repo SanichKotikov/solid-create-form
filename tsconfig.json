@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "baseUrl": "src",
-    "target": "es2017",
+    "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
     "lib": ["esnext", "dom"],
@@ -18,9 +18,8 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
-    "suppressImplicitAnyIndexErrors": true,
     "forceConsistentCasingInFileNames": true,
-    "importsNotUsedAsValues": "error",
+    "verbatimModuleSyntax": true,
     "sourceMap": false,
     "declaration": true,
     "removeComments": true,
